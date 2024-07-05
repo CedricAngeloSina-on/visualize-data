@@ -1,37 +1,75 @@
-import Link from "next/link";
+"use client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { Button } from "~/components/ui/button";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
+import { ThemeToggle } from "~/components/ui/theme-toggle";
+
+// const MAX_UPLOAD_SIZE = 1024 * 1024 * 3; // 3MB
+// const ACCEPTED_FILE_TYPES = ["csv"];
+
+const formSchema = z.object({
+    username: z.string().min(2).max(50),
+});
 
 export default function HomePage() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
-        <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-          Create <span className="text-[hsl(280,100%,70%)]">T3</span> App
-        </h1>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="https://create.t3.gg/en/usage/first-steps"
-            target="_blank"
-          >
-            <h3 className="text-2xl font-bold">First Steps →</h3>
-            <div className="text-lg">
-              Just the basics - Everything you need to know to set up your
-              database and authentication.
+    // 1. Define your form.
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            username: "",
+        },
+    });
+
+    // 2. Define a submit handler.
+    function onSubmit(values: z.infer<typeof formSchema>) {
+        // Do something with the form values.
+        // ✅ This will be type-safe and validated.
+        console.log(values);
+    }
+
+    return (
+        <main className="flex min-h-screen flex-col items-center justify-center">
+            <div className="m-12 items-center text-5xl">
+                <> Upload, Configure, Visualize.</> <ThemeToggle />
             </div>
-          </Link>
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="https://create.t3.gg/en/introduction"
-            target="_blank"
-          >
-            <h3 className="text-2xl font-bold">Documentation →</h3>
-            <div className="text-lg">
-              Learn more about Create T3 App, the libraries it uses, and how to
-              deploy it.
+            <div className="grid w-full max-w-sm items-center gap-1.5">
+                <Form {...form}>
+                    <form
+                        onSubmit={form.handleSubmit(onSubmit)}
+                        className="space-y-8"
+                    >
+                        <FormField
+                            control={form.control}
+                            name="username"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>CSV</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            id="csv"
+                                            placeholder="shadcn"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <Button type="submit">Submit</Button>
+                    </form>
+                </Form>
             </div>
-          </Link>
-        </div>
-      </div>
-    </main>
-  );
+        </main>
+    );
 }
