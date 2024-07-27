@@ -1,13 +1,12 @@
-from flask import Flask
+from flask import Flask, request
 app = Flask(__name__)
+import pandas as pd
 
-@app.route("/api/python")
-def hello():
-    return {
-        "message": "Hello, World!",
-        "test": "hello"
-    }
-    
-@app.route("/api/python/<name>")
-def test_name(name):
-  return f"Hello {name}"
+@app.route("/api/upload_file", methods=["POST"])
+def index():
+  
+    url = request.form['file_url']
+
+    df = pd.read_csv(url, storage_options = {'User-Agent': 'Mozilla/5.0'})
+    head = df.head()
+    return head.to_json()
