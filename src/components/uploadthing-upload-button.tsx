@@ -1,12 +1,11 @@
 "use client";
 import { UploadButton } from "~/utils/uploadthing";
 
-export default function HomePage() {
+export default function UploadthingUploadButton() {
     return (
         <UploadButton
             endpoint="csvUploader"
             onClientUploadComplete={(res) => {
-                // Do something with the response
                 console.log("Files: ", res);
                 alert("Upload Completed");
             }}
